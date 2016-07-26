@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<test nameOfStyle="new Style">
+    <aligment>MIDDLE</aligment>
+    <bgColor></bgColor>
+    <bold>false</bold>
+    <border>4</border>
+    <fontName>ARIAL</fontName>
+    <fontSize>12</fontSize>
+    <fontStyle>as11111112333d</fontStyle>
+    <italic>true</italic>
+    <underLine>true</underLine>
+</test>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<childs>
+    <styl1>
+        <bgColor>FF53E05F</bgColor>
+        <bold>false</bold>
+        <border>4</border>
+        <cell>GROUP</cell>
+        <fontSize>12</fontSize>
+        <italic>true</italic>
+        <underLine>true</underLine>
+    </styl1>
+    <styl2>
+        <bgColor>FFFB2C2C</bgColor>
+        <bold>false</bold>
+        <border>4</border>
+        <cell>DATA</cell>
+        <fontSize>8</fontSize>
+        <italic>false</italic>
+        <underLine>false</underLine>
+    </styl2>
+    <styl3>
+        <bgColor>FFFB2C2C</bgColor>
+        <bold>true</bold>
+        <border>4</border>
+        <cell>DATA</cell>
+        <fontSize>15</fontSize>
+        <italic>false</italic>
+        <underLine>false</underLine>
+    </styl3>
+</childs>
