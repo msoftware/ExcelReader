@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<subStyle nameOfStyle="Pierwszy typ">
+    <bgColor>cos</bgColor>
+    <border>border</border>
+    <font>fon3t</font>
+    <fontSize>12</fontSize>
+    <fontStyle>as11111112333d</fontStyle>
+</subStyle>

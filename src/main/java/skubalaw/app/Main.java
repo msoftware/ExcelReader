@@ -6,6 +6,8 @@ package skubalaw.app;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.poi.ss.usermodel.CellStyle;
+import skubalaw.ExcelReflection.ExcelReflection;
+import skubalaw.ExcelReflection.FieldReader;
 import skubalaw.KindOfCell;
 import skubalaw.cellObjects.Builder;
 import skubalaw.excelparser.*;
@@ -43,8 +45,9 @@ public class Main {
             Object s = new Builder().getGroup(Wiersze.list).getData(exc.getAllDataColumns(), 0);
 
              ExcWriter excWriter = new ExcWriter(exc.getAllGroups(), exc.getAllDataColumns(), rowDataColNum, "testowe1.xlsx");
-            excWriter.choosedList(Wiersze.list);
+            excWriter.colorImportatntList(Wiersze.list);
             excWriter.write();
+
 
 
 

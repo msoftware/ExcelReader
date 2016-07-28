@@ -12,6 +12,10 @@ public class Group<T> extends AGroup {
 
     private List<T> dataList;
 
+    public Group() {
+
+    }
+
     public List<T> getDataList() {
         return dataList;
     }

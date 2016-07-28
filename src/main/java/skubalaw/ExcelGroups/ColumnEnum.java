@@ -5,7 +5,7 @@ package skubalaw.ExcelGroups;
  */
 public enum ColumnEnum {
 
-    PESEL("dane"), ADDRESS("adres");
+    PESEL("pesel"), ADDRESS("address");
 
 
     String value;

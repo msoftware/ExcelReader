@@ -1,48 +1,58 @@
 package skubalaw.excelparser;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.hwpf.usermodel.Fields;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.RegionUtil;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import skubalaw.ExcelGroups.*;
+import skubalaw.ExcelReflection.ExcelReflection;
 import skubalaw.xmlStyle.XmlStyleChooser;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
  * Created by skubalaw on 2016-07-14.
  */
-public class ExcWriter {
+public class ExcWriter<T> extends ExcWriterAbstract {
 
 
     private List<Group> listOfDataColumns;
     private List<Group> listOfGroups;
-    private Workbook wb;
-    private Sheet sheet;
     private String fileName;
     private int rowDataNumber;
     List<String> tmpList = new ArrayList<>();
-    private int firstElementOfList=0;
-    private int lastElementOfList=0;
 
+
+
+    public ExcWriter(List<Group> listOfGroups, List<Group> listOfDataColumns, int rowDataNumber, String fileName) throws ParseException, IllegalAccessException {
+        this.listOfGroups = listOfGroups;
+        this.listOfDataColumns = listOfDataColumns;
+        this.fileName = fileName;
+        this.rowDataNumber = rowDataNumber;
+        if (fileName.endsWith("x")) {
+            wb = new XSSFWorkbook();
+        } else {
+            wb = new HSSFWorkbook();
+        }
+        sheet = wb.createSheet("Shit");
+
+        writeGroups();
+        loadData();
+
+
+        ExcelReflection reflectionExcel = new ExcelReflection(listOfDataColumns);
+    }
 
 
     //color choosed group
-    public void choosedList(List<String> choosedCells) {
+    public void colorImportatntList(List<String> choosedCells) {
         this.tmpList = choosedCells;
         // System.out.println(choosedCells);
         for (Row r :
@@ -73,105 +83,6 @@ public class ExcWriter {
 
     }
 
-    public ExcWriter(List<Group> listOfGroups, List<Group> listOfDataColumns, int rowDataNumber, String fileName) throws ParseException, IllegalAccessException {
-        this.listOfGroups = listOfGroups;
-        this.listOfDataColumns = listOfDataColumns;
-        this.fileName = fileName;
-        this.rowDataNumber = rowDataNumber;
-        if (fileName.endsWith("x")) {
-            wb = new XSSFWorkbook();
-        } else {
-            wb = new HSSFWorkbook();
-        }
-        sheet = wb.createSheet("Shit");
-
-        writeGroups();
-        loadData();
-
-
-        nullCounter(firstElementOfList);
-        listSwapper(ADDRESS.class, firstElementOfList, lastElementOfList);
-        nullCounter(firstElementOfList);
-        listSwapper(ADDRESS.class, firstElementOfList, lastElementOfList);
-        nullCounter(firstElementOfList);
-        listSwapper(ADDRESS.class, firstElementOfList, lastElementOfList);
-        nullCounter(firstElementOfList);
-        listSwapper(ADDRESS.class, firstElementOfList, lastElementOfList);
-        nullCounter(firstElementOfList);
-        listSwapper(ADDRESS.class, firstElementOfList, lastElementOfList);
-        nullCounter(firstElementOfList);
-
-
-        System.out.println(listOfGroups.get(2));
-    }
-
-
-    //zwraca liczbe elementow ile trzeba przypisac do peselu
-    public int nullCounter(int firstElement) {
-        PESEL pesel = new PESEL();
-        pesel.setPesel(listOfDataColumns.get(0).getDataList());
-        boolean wasThere = false;
-        List<Double> lsitaTmp = new ArrayList<>();
-        for (int i = firstElement; i < pesel.getPesel().size(); i++) {
-            if (wasThere == false) {
-                lsitaTmp.add(pesel.getPesel().get(i));
-                wasThere = true;
-                continue;
-            }
-            if (pesel.getPesel().get(i) == null) {
-                lsitaTmp.add(pesel.getPesel().get(i));
-            }
-            if (pesel.getPesel().get(i) != null) {
-                break;
-            }
-        }
-        firstElementOfList=lastElementOfList;
-        lastElementOfList=lsitaTmp.size()+firstElement;
-
-        return lsitaTmp.size();
-    }
-
-
-
-    //DaneAnnotation-work.
-    public Object listSwapper(Class newClass, int firstElementOfList, int nextElementInList) {
-        Object classObject=null;
-        try {
-            classObject = newClass.newInstance();
-            Field[] fields = classObject.getClass().getDeclaredFields();
-
-            for (Field field : fields) {
-                for (Annotation annotation : field.getAnnotations())
-                    if (annotation.annotationType().getSimpleName().equals("ColumnAnnotation")) {
-
-
-                        System.out.println(classObject + "class object");
-                        System.out.println("------------------------------");
-                    } else if (annotation.annotationType().getSimpleName().equals("DaneAnnotation")) {
-                        //
-                        DaneAnnotation data = (DaneAnnotation) annotation;
-                        if (!listOfDataColumns.get(data.value().getNumRow()).getDataList().subList(firstElementOfList, nextElementInList).isEmpty()) {
-                            field.set(classObject, listOfDataColumns.get(data.value().getNumRow()).getDataList().subList(firstElementOfList, nextElementInList));
-                            System.out.println(listOfDataColumns.get(data.value().getNumRow()).getDataList().subList(firstElementOfList, nextElementInList));
-                        }
-
-                    }
-            }
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        for (int i = 0; i < classObject.getClass().getDeclaredFields().length; i++) {
-            Field[] fields = classObject.getClass().getDeclaredFields();
-        }
-        System.out.println("----------------------");
-        return classObject;
-    }
-
-
 
     public void write() {
         if (fileName.endsWith("x")) {
@@ -200,13 +111,13 @@ public class ExcWriter {
 
     }
 
-    public void smth(Cell cell) {
+    public void setCellStyle(Cell cell) {
 
         XmlStyleChooser xmlStyleChooser = new XmlStyleChooser(wb);
         cell.setCellStyle(xmlStyleChooser.readXmlFile());
     }
 
-    public void smth(Cell cell, int i) {
+    public void setCellStyle(Cell cell, int i) {
 
         XmlStyleChooser xmlStyleChooser = new XmlStyleChooser(wb);
         cell.setCellStyle(xmlStyleChooser.readXmlFile(i));
@@ -239,37 +150,20 @@ public class ExcWriter {
                     Cell cell = row.createCell(g.getFirstDim());
                     cell.setCellValue(g.getName());
                     if (i == rowDataNumber) {
-                        smth(cell, 2);
+                        setCellStyle(cell, 2);
                     } else {
-                        smth(cell);
+                        setCellStyle(cell);
                     }
-                    // CALOSC c = new CALOSC(sheet);
-
                     loadMergedRegions(g, cell.getCellStyle().getBorderTop(), cell.getCellStyle().getBorderBottom(), cell.getCellStyle().getBorderLeft(), cell.getCellStyle().getBorderRight());
                 }
-
             }
-
-
         }
-
-
         if (listOfDataColumns.size() != 0) {
             row = sheet.createRow(rowDataNumber - 1);
             for (Group g : listOfDataColumns) {
                 Cell cell = row.createCell(g.getFirstDim());
                 cell.setCellValue(g.getName());
-                smth(cell, 2);
-            }
-
-        }
-    }
-
-    public void getData() {
-        for (Row r :
-                sheet) {
-            for (int i = 0; i < r.getPhysicalNumberOfCells(); i++) {
-
+                setCellStyle(cell, 2);
             }
 
         }
@@ -279,8 +173,8 @@ public class ExcWriter {
     public void loadData() throws ParseException {
 
         Cell cell = null;
-        for (int k = rowDataNumber; k <100;
-               //<rowDataNumber + listOfDataColumns.size()+1 ;
+        for (int k = rowDataNumber; k < 100;
+            //<rowDataNumber + listOfDataColumns.size()+1 ;
              k++) {
             sheet.createRow(k);
         }
@@ -310,8 +204,8 @@ public class ExcWriter {
                     }
                 } else if (cell == null) {
                     cell = null;
-                }else{
-                    cell=null;
+                } else {
+                    cell = null;
                 }
 
             }

@@ -4,7 +4,7 @@ package skubalaw.ExcelGroups;
  * Created by adamczykp on 25.07.2016.
  */
 public enum DataEnum {
-    PESEL("pesel",0),ULICA("ulica",1), NUMERDOMU("numerDomu",2), IMIE("imie",3), NAZWISKO("nazwisko",4);
+    PESEL("pesel",0),ULICA("ulica",1), NUMERDOMU("numerDomu",2), IMIE("imie",3), NAZWISKO("nazwisko",4);//, JAKIES("jakies",5);
 
 
     String value;
